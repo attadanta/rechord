@@ -33,5 +33,5 @@ jobs:
 
       - name: Test
         run: |
-          pytest --coverage --junit-xml=junit/test-results.xml
+          pytest --cov --junit-xml=junit/test-results.xml
 
