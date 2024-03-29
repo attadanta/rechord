@@ -1,10 +1,9 @@
 from util import sign
-from unittest import TestCase
 
 secret = "secret"
 
 
-class TestSign(TestCase):
+class TestSign:
     def test_sign(self):
         params = {
             "method": "user.getRecentTracks",
@@ -14,4 +13,4 @@ class TestSign(TestCase):
             "user": "user",
         }
 
-        self.assertEqual(sign(params, secret), "185a53fa45fb3bc0b13b757c231a0eac")
+        assert sign(params, secret) == "185a53fa45fb3bc0b13b757c231a0eac"
