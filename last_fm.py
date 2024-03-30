@@ -5,6 +5,14 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 
+class Attributes(BaseModel):
+    page: int
+    perPage: int
+    user: str
+    total: int
+    totalPages: int
+
+
 class Timestamp(BaseModel):
     time: datetime = Field(alias="uts")
 
@@ -84,3 +92,12 @@ class GetRecentTracksInput:
     to_date: int
     limit: int = 20
     extended: Literal[0, 1] = 0
+
+
+class Tracklist(BaseModel):
+    tracks: list[Track] = Field(alias="track")
+    attributes: Attributes = Field(alias="@attr")
+
+
+class GetRecentTracksOutput(BaseModel):
+    track_list: Tracklist = Field(alias="recenttracks")
