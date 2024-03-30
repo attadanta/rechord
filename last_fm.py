@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 
+@dataclass
 class Attributes(BaseModel):
     page: int
     perPage: int
@@ -13,25 +14,30 @@ class Attributes(BaseModel):
     totalPages: int
 
 
+@dataclass
 class Timestamp(BaseModel):
     time: datetime = Field(alias="uts")
 
 
+@dataclass
 class Image(BaseModel):
     size: Literal["small", "medium", "large", "extralarge"]
     url: str = Field(alias="#text")
 
 
+@dataclass
 class Artist(BaseModel):
     name: str = Field(alias="#text")
     mbid: str
 
 
+@dataclass
 class Album(BaseModel):
     mbid: str
     name: str = Field(alias="#text")
 
 
+@dataclass
 class Track(BaseModel):
     artist: Artist
     images: list[Image] = Field(alias="image")
@@ -53,6 +59,7 @@ class GetTokenInput:
     api_key: str
 
 
+@dataclass
 class GetTokenOutput(BaseModel):
     """
     The output for the auth.getToken API method
@@ -63,6 +70,7 @@ class GetTokenOutput(BaseModel):
     token: str
 
 
+@dataclass
 class Session(BaseModel):
     """
     The session object returned by the auth.getSession API method
@@ -75,6 +83,7 @@ class Session(BaseModel):
     subscriber: Literal[0, 1]
 
 
+@dataclass
 class GetSessionOutput(BaseModel):
     """
     The session object returned by the auth.getSession API method
@@ -94,10 +103,12 @@ class GetRecentTracksInput:
     extended: Literal[0, 1] = 0
 
 
+@dataclass
 class Tracklist(BaseModel):
     tracks: list[Track] = Field(alias="track")
     attributes: Attributes = Field(alias="@attr")
 
 
+@dataclass
 class GetRecentTracksOutput(BaseModel):
     track_list: Tracklist = Field(alias="recenttracks")
