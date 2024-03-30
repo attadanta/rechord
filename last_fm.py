@@ -19,6 +19,21 @@ class Artist(BaseModel):
     mbid: str
 
 
+class Album(BaseModel):
+    mbid: str
+    name: str = Field(alias="#text")
+
+
+class Track(BaseModel):
+    artist: Artist
+    images: list[Image] = Field(alias="image")
+    mbid: str
+    album: Album
+    name: str
+    url: str
+    timestamp: Timestamp = Field(alias="date")
+
+
 @dataclass
 class GetTokenInput:
     """
