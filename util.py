@@ -7,6 +7,16 @@ from httpx import Client, Request
 from last_fm import Method
 
 
+def time_intervals(
+    start: date, end: date, interval: timedelta
+) -> Generator[tuple[date, date], None, None]:
+    current = start
+    while current < end:
+        next_date = current + interval
+        yield current, min(next_date, end)
+        current = next_date
+
+
 def days_between(from_date: date, to_date: date) -> Generator[date, None, None]:
     while from_date <= to_date:
         yield from_date
