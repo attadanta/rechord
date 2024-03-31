@@ -5,6 +5,11 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 
+class Error(BaseModel):
+    error: int
+    message: str
+
+
 class Attributes(BaseModel):
     page: int
     perPage: int
