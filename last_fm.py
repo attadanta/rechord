@@ -102,6 +102,7 @@ class GetRecentTracksInput:
     user: str
     from_date: int
     to_date: int
+    page: int = 1
     limit: int = 20
     extended: Literal[0, 1] = 0
 

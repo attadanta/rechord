@@ -19,6 +19,7 @@ def test_recent_tracks_input_data_class_dict():
         "user": "user",
         "from_date": 1,
         "to_date": 2,
+        "page": 1,
         "limit": 20,
         "extended": 1,
     }
