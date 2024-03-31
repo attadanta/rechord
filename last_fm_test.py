@@ -1,4 +1,3 @@
-from dataclasses import asdict
 from pydantic import ValidationError
 from pytest import raises as pytest_raises
 from datetime import datetime, timezone
@@ -14,16 +13,21 @@ from last_fm import (
 
 
 def test_recent_tracks_input_data_class_dict():
-    i = GetRecentTracksInput(user="user", from_date=1, to_date=2, extended=1)
+    date_from = datetime(2024, 3, 30, 7, 11, 52, tzinfo=timezone.utc)
+    date_to = datetime(2024, 3, 30, 7, 11, 52, tzinfo=timezone.utc)
+
+    i = GetRecentTracksInput(
+        user="user", date_from=date_from, date_to=date_to, extended=1
+    )
     expected = {
         "user": "user",
-        "from_date": 1,
-        "to_date": 2,
+        "from": int(date_from.timestamp()),
+        "to": int(date_to.timestamp()),
         "page": 1,
         "limit": 20,
         "extended": 1,
     }
-    assert asdict(i) == expected
+    assert i.model_dump(by_alias=True) == expected
 
 
 def test_timestamp_deserialization():

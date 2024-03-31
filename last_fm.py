@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_serializer
 
 
 class Method(StrEnum):
@@ -97,14 +97,17 @@ class GetSessionOutput(BaseModel):
     session: Session
 
 
-@dataclass
-class GetRecentTracksInput:
+class GetRecentTracksInput(BaseModel):
     user: str
-    from_date: int
-    to_date: int
+    date_from: datetime = Field(serialization_alias="from")
+    date_to: datetime = Field(serialization_alias="to")
     page: int = 1
     limit: int = 20
     extended: Literal[0, 1] = 0
+
+    @field_serializer("date_from", "date_to")
+    def serialize_timestamp(v: datetime) -> int:
+        return int(v.timestamp())
 
 
 class Tracklist(BaseModel):
