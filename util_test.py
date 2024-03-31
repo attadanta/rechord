@@ -1,11 +1,12 @@
 from util import sign
+from last_fm import Method
 
 secret = "secret"
 
 
 def test_sign():
     params = {
-        "method": "user.getRecentTracks",
+        "method": Method.user_get_recent_tracks,
         "api_key": "api_key",
         "foo": None,
         "sk": "session_key",

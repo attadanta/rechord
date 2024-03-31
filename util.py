@@ -2,8 +2,9 @@ from io import StringIO
 from hashlib import md5
 import os
 from datetime import date, timedelta
-from typing import Generator
-from httpx import Client
+from typing import Generator, Any, Mapping, Optional
+from httpx import Client, Request
+from last_fm import Method
 
 
 def days_between(from_date: date, to_date: date) -> Generator[date, None, None]:
@@ -26,12 +27,10 @@ def create_unauthorized_client(base_url: str, api_key: str) -> Client:
     )
 
 
-def create_authorized_client(
-    base_url: str, api_key: str, user: str, session_key: str
-) -> Client:
+def create_authorized_client(base_url: str, api_key: str, session_key: str) -> Client:
     return Client(
         base_url=base_url,
-        params={"api_key": api_key, "user": user, "sk": session_key, "format": "json"},
+        params={"api_key": api_key, "sk": session_key, "format": "json"},
     )
 
 
@@ -41,6 +40,27 @@ def get_renv(name: str) -> str:
     if value is None:
         raise ValueError(f"{name} environment variable is required")
     return value
+
+
+def create_signed_get_request(
+    client: Client,
+    method: Method,
+    secret: str,
+    params: Optional[Mapping[str, Any]] = None,
+) -> Request:
+    """
+    Create a signed GET request for the given method and parameters.
+    """
+    if params is None:
+        params = {}
+
+    request_params = {}
+    request_params.update(client.params)
+    request_params.update(params)
+    request_params["method"] = method
+    request_params["api_sig"] = sign(request_params, secret)
+
+    return client.build_request("GET", "/2.0", params=request_params)
 
 
 def sign(params: dict[str, str], secret: str) -> str:
