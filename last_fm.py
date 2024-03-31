@@ -1,8 +1,15 @@
+from enum import StrEnum
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Literal
 
 from pydantic import BaseModel, Field
+
+
+class Method(StrEnum):
+    user_get_recent_tracks = "user.getRecentTracks"
+    auth_get_token = "auth.getToken"
+    auth_get_session = "auth.getSession"
 
 
 class Error(BaseModel):
