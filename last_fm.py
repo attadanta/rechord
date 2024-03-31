@@ -2,8 +2,8 @@ from enum import StrEnum
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Literal
-
 from pydantic import BaseModel, Field, field_serializer
+from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 
 class Method(StrEnum):
@@ -12,12 +12,14 @@ class Method(StrEnum):
     auth_get_session = "auth.getSession"
 
 
-class Error(BaseModel):
+@pydantic_dataclass(frozen=True)
+class Error:
     error: int
     message: str
 
 
-class Attributes(BaseModel):
+@pydantic_dataclass(frozen=True)
+class Attributes:
     page: int
     perPage: int
     user: str
@@ -25,36 +27,41 @@ class Attributes(BaseModel):
     totalPages: int
 
 
-class Timestamp(BaseModel):
+@pydantic_dataclass(frozen=True)
+class Timestamp:
     time: datetime = Field(alias="uts")
 
 
-class Image(BaseModel):
+@pydantic_dataclass(frozen=True)
+class Image:
     size: Literal["small", "medium", "large", "extralarge"]
     url: str = Field(alias="#text")
 
 
-class Artist(BaseModel):
-    name: str = Field(alias="#text")
-    mbid: str
-
-
-class Album(BaseModel):
+@pydantic_dataclass(frozen=True)
+class Artist:
     mbid: str
     name: str = Field(alias="#text")
 
 
-class Track(BaseModel):
+@pydantic_dataclass(frozen=True)
+class Album:
+    mbid: str
+    name: str = Field(alias="#text")
+
+
+@pydantic_dataclass(frozen=True)
+class Track:
     artist: Artist
-    images: list[Image] = Field(alias="image")
     mbid: str
     album: Album
     name: str
     url: str
+    images: list[Image] = Field(alias="image")
     timestamp: Timestamp = Field(alias="date")
 
 
-@dataclass
+@dataclass(frozen=True)
 class GetTokenInput:
     """
     The input for the auth.getToken API method
@@ -65,7 +72,8 @@ class GetTokenInput:
     api_key: str
 
 
-class GetTokenOutput(BaseModel):
+@pydantic_dataclass(frozen=True)
+class GetTokenOutput:
     """
     The output for the auth.getToken API method
 
@@ -75,7 +83,8 @@ class GetTokenOutput(BaseModel):
     token: str
 
 
-class Session(BaseModel):
+@pydantic_dataclass(frozen=True)
+class Session:
     """
     The session object returned by the auth.getSession API method
 
@@ -87,7 +96,8 @@ class Session(BaseModel):
     subscriber: Literal[0, 1]
 
 
-class GetSessionOutput(BaseModel):
+@pydantic_dataclass(frozen=True)
+class GetSessionOutput:
     """
     The session object returned by the auth.getSession API method
 
@@ -110,10 +120,12 @@ class GetRecentTracksInput(BaseModel):
         return int(v.timestamp())
 
 
-class Tracklist(BaseModel):
+@pydantic_dataclass(frozen=True)
+class Tracklist:
     tracks: list[Track] = Field(alias="track")
     attributes: Attributes = Field(alias="@attr")
 
 
-class GetRecentTracksOutput(BaseModel):
+@pydantic_dataclass(frozen=True)
+class GetRecentTracksOutput:
     recent_tracks: Tracklist = Field(alias="recenttracks")
