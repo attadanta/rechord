@@ -94,12 +94,10 @@ class GetRecentTracksInput:
     extended: Literal[0, 1] = 0
 
 
-@dataclass
 class Tracklist(BaseModel):
     tracks: list[Track] = Field(alias="track")
     attributes: Attributes = Field(alias="@attr")
 
 
-@dataclass
 class GetRecentTracksOutput(BaseModel):
-    track_list: Tracklist = Field(alias="recenttracks")
+    recent_tracks: Tracklist = Field(alias="recenttracks")

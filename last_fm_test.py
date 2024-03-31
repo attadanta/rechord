@@ -145,8 +145,8 @@ def test_recent_tracks_output_deserialization():
 
     output = GetRecentTracksOutput(**data)
 
-    track_list = output.track_list
+    track_list = output.recent_tracks
 
-    assert len(output.track_list.tracks) == 1
+    assert len(output.recent_tracks.tracks) == 1
     assert track_list.tracks[0].artist.name == "Suede"
     assert track_list.attributes.user == "scrbl"
