@@ -2,7 +2,7 @@ from pydantic import ValidationError
 from pytest import raises as pytest_raises
 from datetime import datetime, timezone
 
-from last_fm_model import (
+from .last_fm_types import (
     GetRecentTracksInput,
     Image,
     Timestamp,

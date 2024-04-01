@@ -5,7 +5,7 @@ import json
 from datetime import date, timedelta
 from typing import Generator, Any, Mapping, Optional
 from httpx import Client, Request
-from last_fm_model import Method, Track, GetRecentTracksOutput
+from .last_fm_model import Method, Track, GetRecentTracksOutput
 
 
 def date_intervals(
@@ -28,13 +28,6 @@ def days_between(from_date: date, to_date: date) -> Generator[date, None, None]:
     while from_date <= to_date:
         yield from_date
         from_date += timedelta(days=1)
-
-
-def create_authorization_client(base_url: str, api_key: str) -> Client:
-    return Client(
-        base_url=base_url,
-        params={"api_key": api_key},
-    )
 
 
 def create_unauthorized_client(base_url: str, api_key: str) -> Client:
