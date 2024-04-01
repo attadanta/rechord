@@ -40,7 +40,7 @@ def load_tracks_data(dir: str) -> list[Track]:
     tracks = []
 
     for tracks_file in [
-        file
+        os.path.join(dir, file)
         for file in os.listdir(dir)
         if file.startswith("tracks_") and file.endswith(".json")
     ]:
