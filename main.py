@@ -3,13 +3,22 @@ from datetime import datetime
 
 from fastapi import FastAPI, HTTPException
 
+from last_fm_model import Album
 from stats import first_and_last_listen, tracks_in_album, unique_albums
 from util import load_tracks_data
+
 
 tracks = load_tracks_data("data")
 albums = list(
     album for album in unique_albums(tracks) if album.mbid != "" and album.name != ""
 )
+
+
+def by_playcount(album: Album):
+    return len(tracks_in_album(tracks, album))
+
+
+albums.sort(key=by_playcount, reverse=True)
 
 
 @dataclass
