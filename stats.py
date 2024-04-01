@@ -33,7 +33,7 @@ def unique_albums(tracks: Sequence[Track]) -> set[Album]:
     return set(track.album for track in tracks)
 
 
-def sort_by_time_played(track: Track) -> datetime:
+def by_time_played(track: Track) -> datetime:
     """
     Given a track, return the time it was played.
     """
@@ -59,12 +59,12 @@ def first_and_last_listen(tracks: Sequence[Track]) -> tuple[datetime, datetime]:
     Given a sequence of tracks, return the first and last time played.
     """
     if not tracks:
-        return (None, None)
+        raise ValueError("No tracks provided")
 
     if len(tracks) == 1:
         return tracks[0].timestamp.time, tracks[0].timestamp.time
 
-    sorted_tracks = sorted(tracks, key=sort_by_time_played)
+    sorted_tracks = sorted(tracks, key=by_time_played)
     first, last = sorted_tracks[0], sorted_tracks[-1]
 
     return (first.timestamp.time, last.timestamp.time)
