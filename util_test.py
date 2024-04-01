@@ -1,6 +1,7 @@
-from util import sign, date_intervals
-from last_fm_model import Method
+from util import date_intervals
 from datetime import date, timedelta
+from last_fm_model import Method
+from last_fm_client import sign
 
 secret = "secret"
 
