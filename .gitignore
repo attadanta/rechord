@@ -1,6 +1,7 @@
 .venv
 __pycache__
 junit
+data
 .pytest_cache
 .coverage
 .env
