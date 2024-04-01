@@ -1,17 +1,14 @@
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import datetime
 
-from fastapi import FastAPI
-from last_fm_model import (
-    Track, Album
-)
-from stats import unique_albums, tracks_in_album, first_and_last_listen
+from fastapi import FastAPI, HTTPException
 
-
+from stats import first_and_last_listen, tracks_in_album, unique_albums
 from util import load_tracks_data
 
 tracks = load_tracks_data("data")
 albums = list(album for album in unique_albums(tracks) if album.mbid != "")
+
 
 @dataclass
 class AlbumDetails:
@@ -20,7 +17,6 @@ class AlbumDetails:
     first_listen: datetime
     last_listen: datetime
     total_playcount: int
-
 
 
 api = FastAPI()
@@ -38,7 +34,6 @@ async def album_details(album_id: int) -> AlbumDetails:
     if not album:
         raise HTTPException(status_code=404, detail="Album not found")
 
-
     album_tracks = tracks_in_album(tracks, album)
     first, last = first_and_last_listen(album_tracks)
 
@@ -49,4 +44,3 @@ async def album_details(album_id: int) -> AlbumDetails:
         last_listen=last,
         total_playcount=len(album_tracks),
     )
-
