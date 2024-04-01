@@ -7,13 +7,19 @@ from httpx import Client, Request
 from last_fm_model import Method
 
 
-def time_intervals(
-    start: date, end: date, interval: timedelta
+def date_intervals(
+    start: date,
+    end: date,
+    interval: timedelta,
+    epsilon: timedelta = timedelta(days=1),
 ) -> Generator[tuple[date, date], None, None]:
     current = start
     while current < end:
-        next_date = current + interval
-        yield current, min(next_date, end)
+        next_date = min(current + interval, end)
+        interval_end = next_date
+        if next_date < end:
+            interval_end -= epsilon
+        yield current, interval_end
         current = next_date
 
 

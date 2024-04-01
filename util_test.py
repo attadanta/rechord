@@ -1,4 +1,4 @@
-from util import sign, time_intervals
+from util import sign, date_intervals
 from last_fm_model import Method
 from datetime import date, timedelta
 
@@ -7,13 +7,13 @@ secret = "secret"
 
 def test_time_intervals():
     intervals = list(
-        time_intervals(date(2024, 3, 1), date(2024, 3, 31), timedelta(days=7))
+        date_intervals(date(2024, 3, 1), date(2024, 3, 31), timedelta(days=7))
     )
     assert intervals == [
-        (date(2024, 3, 1), date(2024, 3, 8)),
-        (date(2024, 3, 8), date(2024, 3, 15)),
-        (date(2024, 3, 15), date(2024, 3, 22)),
-        (date(2024, 3, 22), date(2024, 3, 29)),
+        (date(2024, 3, 1), date(2024, 3, 7)),
+        (date(2024, 3, 8), date(2024, 3, 14)),
+        (date(2024, 3, 15), date(2024, 3, 21)),
+        (date(2024, 3, 22), date(2024, 3, 28)),
         (date(2024, 3, 29), date(2024, 3, 31)),
     ]
 
