@@ -1,5 +1,5 @@
 from util import sign, time_intervals
-from last_fm import Method
+from last_fm_model import Method
 from datetime import date, timedelta
 
 secret = "secret"

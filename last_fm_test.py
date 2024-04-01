@@ -2,7 +2,7 @@ from pydantic import ValidationError
 from pytest import raises as pytest_raises
 from datetime import datetime, timezone
 
-from last_fm import (
+from last_fm_model import (
     GetRecentTracksInput,
     Image,
     Timestamp,
@@ -12,7 +12,7 @@ from last_fm import (
 )
 
 
-def test_recent_tracks_input_data_class_dict():
+def test_recent_tracks_input_as_params():
     date_from = datetime(2024, 3, 30, 7, 11, 52, tzinfo=timezone.utc)
     date_to = datetime(2024, 3, 30, 7, 11, 52, tzinfo=timezone.utc)
 
@@ -27,7 +27,7 @@ def test_recent_tracks_input_data_class_dict():
         "limit": 20,
         "extended": 1,
     }
-    assert i.model_dump(by_alias=True) == expected
+    assert i.as_params() == expected
 
 
 def test_timestamp_deserialization():

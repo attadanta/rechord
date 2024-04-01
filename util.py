@@ -4,7 +4,7 @@ import os
 from datetime import date, timedelta
 from typing import Generator, Any, Mapping, Optional
 from httpx import Client, Request
-from last_fm import Method
+from last_fm_model import Method
 
 
 def time_intervals(

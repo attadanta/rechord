@@ -2,7 +2,7 @@ from enum import StrEnum
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Literal
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import BaseModel, Field
 from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 
@@ -27,8 +27,7 @@ class Attributes:
     totalPages: int
 
 
-@pydantic_dataclass(frozen=True)
-class Timestamp:
+class Timestamp(BaseModel):
     time: datetime = Field(alias="uts")
 
 
@@ -107,17 +106,24 @@ class GetSessionOutput:
     session: Session
 
 
-class GetRecentTracksInput(BaseModel):
+@dataclass(frozen=True)
+class GetRecentTracksInput:
     user: str
-    date_from: datetime = Field(serialization_alias="from")
-    date_to: datetime = Field(serialization_alias="to")
+    date_from: datetime
+    date_to: datetime
     page: int = 1
     limit: int = 20
     extended: Literal[0, 1] = 0
 
-    @field_serializer("date_from", "date_to")
-    def serialize_timestamp(v: datetime) -> int:
-        return int(v.timestamp())
+    def as_params(self) -> dict:
+        return {
+            "user": self.user,
+            "from": int(self.date_from.timestamp()),
+            "to": int(self.date_to.timestamp()),
+            "page": self.page,
+            "limit": self.limit,
+            "extended": self.extended,
+        }
 
 
 @pydantic_dataclass(frozen=True)
