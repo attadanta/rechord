@@ -1,10 +1,11 @@
 from io import StringIO
 from hashlib import md5
 import os
+import json
 from datetime import date, timedelta
 from typing import Generator, Any, Mapping, Optional
 from httpx import Client, Request
-from last_fm_model import Method
+from last_fm_model import Method, Track, GetRecentTracksOutput
 
 
 def date_intervals(
@@ -56,6 +57,18 @@ def get_renv(name: str) -> str:
     if value is None:
         raise ValueError(f"{name} environment variable is required")
     return value
+
+
+def load_tracks_data(dir: str) -> list[Track]:
+    tracks = []
+
+    for file in os.listdir(dir):
+        with open(file, "r") as f:
+            data = json.load(f)
+            recent_tracks_output = GetRecentTracksOutput(**data)
+            tracks.extend(recent_tracks_output.recent_tracks.tracks)
+
+    return tracks
 
 
 def create_signed_get_request(
