@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 from last_fm_model import Album
 from stats import first_and_last_listen, tracks_in_album, unique_albums
@@ -9,6 +11,7 @@ from util import load_tracks_data
 
 
 tracks = load_tracks_data("data")
+
 albums = list(
     album for album in unique_albums(tracks) if album.mbid != "" and album.name != ""
 )
@@ -21,6 +24,16 @@ def by_playcount(album: Album):
 albums.sort(key=by_playcount, reverse=True)
 
 
+templates = Jinja2Templates(directory="templates")
+
+
+@dataclass
+class AlbumSummary:
+    id: int
+    name: str
+    mbid: str
+
+
 @dataclass
 class AlbumDetails:
     name: str
@@ -31,6 +44,20 @@ class AlbumDetails:
 
 
 api = FastAPI()
+
+
+@api.get("/")
+async def home(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "albums": [
+                AlbumSummary(i, album.name, album.mbid)
+                for i, album in enumerate(albums)
+            ],
+        },
+    )
 
 
 @api.get("/albums")
