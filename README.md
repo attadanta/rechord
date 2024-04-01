@@ -27,7 +27,7 @@ python download_tracks.py \
     --api-key [API-KEY] \
     --secret [SECRET] \
     --session [SESSION] \
-    --user scrbl \
+    --user [USER] \
     --from [FROM-YYYY-MM-DD] \
     --to [TO-YYYY-MM-DD] \
     --dest-dir [DEST-DIR]
