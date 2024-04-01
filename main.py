@@ -7,7 +7,9 @@ from stats import first_and_last_listen, tracks_in_album, unique_albums
 from util import load_tracks_data
 
 tracks = load_tracks_data("data")
-albums = list(album for album in unique_albums(tracks) if album.mbid != "")
+albums = list(
+    album for album in unique_albums(tracks) if album.mbid != "" and album.name != ""
+)
 
 
 @dataclass
