@@ -5,9 +5,35 @@ from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from last_fm_model import Album
+from last_fm_model import Album, Track
 from stats import first_and_last_listen, tracks_in_album, unique_albums
 from util import load_tracks_data
+
+
+@dataclass
+class AlbumSummary:
+    mbid: str
+    name: str
+
+
+@dataclass
+class AlbumDetails:
+    name: str
+    mbid: str
+    first_listen: datetime
+    last_listen: datetime
+    total_playcount: int
+
+
+class Store:
+    def __init__(self, tracks: list[Track]):
+        self.tracks = tracks
+
+        self.albums = {
+            album.mbid: AlbumSummary(album.mbid, album.name)
+            for album in unique_albums(tracks)
+            if album.mbid != "" and album.name != ""
+        }
 
 
 tracks = load_tracks_data("data")
@@ -27,22 +53,6 @@ albums.sort(key=by_playcount, reverse=True)
 templates = Jinja2Templates(directory="templates")
 
 
-@dataclass
-class AlbumSummary:
-    id: int
-    name: str
-    mbid: str
-
-
-@dataclass
-class AlbumDetails:
-    name: str
-    mbid: str
-    first_listen: datetime
-    last_listen: datetime
-    total_playcount: int
-
-
 api = FastAPI()
 
 
@@ -52,10 +62,7 @@ async def home(request: Request) -> HTMLResponse:
         "index.html",
         {
             "request": request,
-            "albums": [
-                AlbumSummary(i, album.name, album.mbid)
-                for i, album in enumerate(albums)
-            ],
+            "albums": [AlbumSummary(album.mbid, album.name) for album in albums],
         },
     )
 
@@ -66,8 +73,8 @@ async def albums_index():
 
 
 @api.get("/albums/{album_id}")
-async def album_details(album_id: int) -> AlbumDetails:
-    album = albums[album_id]
+async def album_details(album_id: str) -> AlbumDetails:
+    album = next((album for album in albums if album.mbid == album_id), None)
 
     if not album:
         raise HTTPException(status_code=404, detail="Album not found")

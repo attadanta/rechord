@@ -2,7 +2,7 @@
 	{% for album in albums %}
 		<li>
 			<a href="/albums/{{ album.id }}" title="{{ album.name }}">{{ album.name }}</a>
-			<a href="https://musicbrainz.org/release/{{ album.mbid }}" title="{{ album.name }} at musicbrainz">mb</a>
+			<a class="text-sm text-gray-400" href="https://musicbrainz.org/release/{{ album.mbid }}" title="{{ album.name }} at musicbrainz">mb</a>
 		</li>
 	{% endfor %}
 </ul>
